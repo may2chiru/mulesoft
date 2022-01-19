@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="44f210ab-25b4-4d13-b4f4-b31eab7ec88e" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="debugFlow" doc:id="b746ca19-917e-4524-9d6f-57e2537fc391" >
+		<http:listener doc:name="Listener" doc:id="087f9381-eb8b-4317-93e0-a0fe1582f629" config-ref="HTTP_Listener_config" path="debug"/>
+		<set-payload value="mainflow" doc:name="Set Payload" doc:id="469449e9-9149-4f16-b466-18216a12dd25" />
+		<logger level="INFO" doc:name="Logger" doc:id="c92d4071-afda-4c2a-ac37-a25bac27bc37" message="#[payload]"/>
+		<flow-ref doc:name="Flow Reference" doc:id="cf6797d7-ccce-46dc-ab4c-fc9df4f44c4e" name="debugsub_Flow"/>
+		<flow-ref doc:name="Flow Reference" doc:id="9f13949a-ec5d-4204-b312-964278ca09ba" name="debugprivateFlow"/>
+		<flow-ref doc:name="subtraction" doc:id="1161bbf5-0984-4110-894a-fe0cf2443a23" name="subb"/>
+	</flow>
+	<sub-flow name="debugsub_Flow" doc:id="b5254166-c256-4542-b01c-84ffed288e77" >
+		<logger level="INFO" doc:name="Logger" doc:id="b04f32ae-f937-4f2a-b9a4-de30dc608874" message="subflow"/>
+	</sub-flow>
+	<sub-flow name="subb" doc:id="789837ef-e204-48bf-876c-ba54b956e657" >
+		<logger level="INFO" doc:name="Logger" doc:id="9d9fc9ba-3eb4-42a3-837f-25474300d52b" message="subtract two values"/>
+	</sub-flow>
+	<flow name="debugprivateFlow" doc:id="626d6bb8-5619-41f3-8ada-82220f4bfe99" >
+		<logger level="INFO" doc:name="Logger" doc:id="cbb495af-4f14-4748-9dcd-0c6e8211545e" message="privateflow"/>
+	</flow>
+</mule>

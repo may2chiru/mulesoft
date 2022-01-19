@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ftp" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ftp http://www.mulesoft.org/schema/mule/ftp/current/mule-ftp.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2bff38a3-b265-4184-b470-24d542a7fa5a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="77bc5824-65f3-44b7-b111-beeb6841ae25" />
+	<file:config name="File_Config1" doc:name="File Config" doc:id="5d6ed6ef-881b-4d49-88f3-03f7eb0375a4" />
+	<flow name="fileFlow" doc:id="97beb849-fb8f-4424-877c-38e624acc77a">
+		<http:listener doc:name="Listener" doc:id="02aeb1fa-f029-464e-a6b5-9ca7535ff461" config-ref="HTTP_Listener_config" path="file" allowedMethods="POST">
+		</http:listener>
+		<file:create-directory doc:name="Create directory" doc:id="80b4b5e5-6ac2-43a6-989c-3115b27d8e9d" config-ref="File_Config" directoryPath="/Users/chiranjeevithota/Desktop/source"/>
+		<file:rename doc:name="Rename" doc:id="c8cc36f3-fe76-4e9d-99e9-d11662147d83" config-ref="File_Config" path="/Users/chiranjeevithota/Desktop/source" to="chiru" overwrite="true"/>
+		<file:write doc:name="Write" doc:id="42e1d4d1-1096-4b27-be46-cec5fc324a07" config-ref="File_Config" path="/Users/chiranjeevithota/Desktop/chiru/example">
+			<file:content ><![CDATA[hai this is my new creation]]></file:content>
+		</file:write>
+		<file:read doc:name="Read" doc:id="7d7d5378-3a13-47c7-8433-0e03d0adf6b7" config-ref="File_Config" path="/Users/chiranjeevithota/Desktop/chiru/example"/>
+		<logger level="INFO" doc:name="Logger" doc:id="080b68f4-c6b5-4487-83e9-45cacff75c1a" message="#[payload]"/>
+		<file:copy doc:name="Copy" doc:id="ce6c27aa-7e22-4e01-adf7-e68a3672e988" config-ref="File_Config" sourcePath="/Users/chiranjeevithota/Desktop/chiru" targetPath="/Users/chiranjeevithota/Desktop/source"/>
+	</flow>
+	<flow name="fileFlow1" doc:id="53bc6335-f897-49cd-89aa-982a728512e8" >
+		<file:listener doc:name="On New or Updated File" doc:id="a252b45f-40ad-42f5-9790-39ebcf4c7873" config-ref="File_Config" directory="/Users/chiranjeevithota/Desktop/source" moveToDirectory="/Users/chiranjeevithota/Desktop/chiru1" renameTo="files">
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</file:listener>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="669f8ebb-a6f9-46cb-bc69-affd32a1e655" />
+		<logger level="INFO" doc:name="Logger" doc:id="442b9031-ed16-4ed1-ae09-06b4927b16a7" message="#[payload]"/>
+		<file:list doc:name="List" doc:id="71066ca2-663d-4afe-888d-5c192aaa7330" config-ref="File_Config" directoryPath="/Users/chiranjeevithota/Desktop/chiru1"/>
+		<set-payload value="#[payload]" doc:name="Set Payload" doc:id="00b8fc9b-7487-42e2-81ba-95c85f75254b" />
+		<logger level="INFO" doc:name="Logger" doc:id="75ea5ef4-53ea-4a96-be84-d3ba759c68b0" message="#[payload]"/>
+	</flow>
+</mule>

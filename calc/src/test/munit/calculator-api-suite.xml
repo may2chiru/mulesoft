@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="calculator-api-suite.xml" />
+	<munit:test name="calculator-api-main-test" doc:id="dd819b0b-cfb4-484d-985a-87c7004dae18" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="014a797a-e18b-467e-b577-98b757b96ad9" >
+				<munit:payload value="#[readUrl('classpath://calculatorapimaintest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://calculatorapimaintest/set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to calculator-api-main" doc:id="38125b92-ca6a-49e3-a3a9-37a310453979" name="calculator-api-main"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="4b75fdad-1dca-4b51-862e-3296172a10c3" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import calculatorapimaintest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="put:\multiplication:calculator-api-config-test" doc:id="7302a5e2-7f50-412b-97c6-f8792b385bd2" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="56fdecd7-0808-485c-8bb2-9f77abaf9e68" >
+				<munit:payload value="#[readUrl('classpath://putmultiplicationcalculatorapiconfigtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://putmultiplicationcalculatorapiconfigtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://putmultiplicationcalculatorapiconfigtest/set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put:\multiplication:calculator-api-config" doc:id="019b491a-3308-4ed5-b109-601abc23d797" name="put:\multiplication:calculator-api-config"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="1f1a41f4-6790-485b-9cc1-3644ca646648" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import putmultiplicationcalculatorapiconfigtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+</mule>

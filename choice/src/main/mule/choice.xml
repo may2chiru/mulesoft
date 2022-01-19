@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="89f87b89-1f9a-40d2-a602-8ccc397bd2e4" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choiceFlow" doc:id="c00362a4-0f94-4f35-b62b-42976f975f2b" >
+		<http:listener doc:name="Listener" doc:id="bed4a22d-6b8e-452e-bac0-027743ec7bd9" config-ref="HTTP_Listener_config" path="choice"/>
+		<set-variable value="#[attributes.queryParams.fruits]" doc:name="Set Variable" doc:id="be2b280f-7ce7-4e4f-933f-12ce6377cbfd" variableName="fruits"/>
+		<choice doc:name="Choice" doc:id="01090437-56d4-4371-b915-9b8c5ce417eb" >
+			<when expression='#[vars.fruits == "apple"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="3760c5b5-a9d0-43f8-9b08-b96475efea67" message="apple"/>
+			</when>
+			<when expression='#[vars.fruits == "banana"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="c6b26aee-aeb3-4900-a3c6-e749e5d09a76" message="banana"/>
+			</when>
+			<when expression='#[vars.fruits == "grapes"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="ed1aff95-8d05-4352-abaf-ceddce7f2abf" message="grapes"/>
+			</when>
+			<when expression='#[vars.fruits == "goa"]'>
+				<logger level="INFO" doc:name="Logger" doc:id="a74c9661-070e-4af7-b6ef-c02ba40a8502" message="goa"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Logger" doc:id="d36189a1-4ea8-45e4-a9fc-c751275584b5" message="no fruit is availble"/>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
